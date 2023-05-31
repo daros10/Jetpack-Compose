@@ -14,10 +14,16 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.Button
+import androidx.compose.material3.Divider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -34,10 +40,35 @@ class MainActivity : ComponentActivity() {
         Surface(
           modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background
         ) {
-          MyComplexLayout()
+          MyFirstStateExample()
         }
       }
     }
+  }
+}
+
+@Composable
+fun MyFirstStateExample() {
+  // val counter = remember { mutableStateOf(0) } // remember reinicia el estado de la app si se destruye el activity (ciclo de vida)
+                                                // debes usar counter.value para acceder al valor
+  // val counter = rememberSaveable{ mutableStateOf(0) } // guarda el estado así se haya destruido el activity
+                                                        // debes usar counter.value para acceder al valor
+  var counter by rememberSaveable{ mutableStateOf(0) } // usando el by debemos importar lo siguiente:
+                                                            // import androidx.compose.runtime.setValue
+                                                            // import androidx.compose.runtime.getValue
+                                                            // ya no se usa el .value y se declara como var
+  Column(
+    Modifier.fillMaxSize(),
+    Arrangement.Center,
+    Alignment.CenterHorizontally
+  ) {
+    Button(onClick = {
+      counter+=1
+    }) {
+      Text(text = "Click me")
+    }
+    Divider(Modifier.height(10.dp), color = Color.Transparent)
+    Text(text = "you are clicked $counter")
   }
 }
 
@@ -130,7 +161,7 @@ fun MyComplexLayout() {
             .fillMaxWidth()
             .weight(1f),
         ) {
-          Row{
+          Row {
             Box(
               modifier = Modifier
                 .fillMaxHeight()
@@ -146,7 +177,7 @@ fun MyComplexLayout() {
                 .weight(1f)
                 .background(Color.LightGray),
               contentAlignment = Alignment.BottomCenter
-            ){
+            ) {
               Text(text = "cyan light!", color = Color.Black)
             }
             Box(
@@ -155,7 +186,7 @@ fun MyComplexLayout() {
                 .weight(1f)
                 .background(Color.Transparent),
               contentAlignment = Alignment.BottomCenter
-            ){
+            ) {
               Text(text = "tr box!", color = Color.Black)
             }
             Box(
@@ -164,7 +195,7 @@ fun MyComplexLayout() {
                 .weight(1f)
                 .background(Color.Yellow),
               contentAlignment = Alignment.BottomCenter
-            ){
+            ) {
               Text(text = "yellow box!", color = Color.Black)
             }
           }
@@ -199,8 +230,7 @@ fun MyColum() {
     Text("This is my text 2", modifier = Modifier.background(Color.Cyan))
     Text("This is my text 3", modifier = Modifier.background(Color.Yellow))
     Text("This is my text 4", modifier = Modifier.background(Color.Green))
-    Box(
-    ) {
+    Box {
       Text(
         "This is my text 6", modifier = Modifier
           .background(Color.Gray)
@@ -237,6 +267,6 @@ fun MyBox() {
 @Composable
 fun GreetingPreview() {
   MyApplicationTheme {
-    MyComplexLayout()
+    MyFirstStateExample()
   }
 }
